@@ -1,6 +1,6 @@
 """Interface for the robot arm."""
 
-from math import acos, atan, sin, asin
+from math import acos, atan, sin, asin, pi
 import RPi.GPIO as GPIO
 from . import servo
 
@@ -20,8 +20,8 @@ class RobotArm:
     L1 = 80 # Shoulder to elbow length
     L2 = 80 # Elbow to wrist length
 
-    ph1 = 0 # servo1 phase offset
-    ph2 = 0 # servo2 phase offset
+    ph1 = pi / 2 # servo1 phase offset
+    ph2 = pi / 2 # servo2 phase offset
     origin = L1, L2
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
