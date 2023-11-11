@@ -179,20 +179,14 @@ class EasyArm:
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
 
-        print(self._servo1.getAngle(), self._servo2.getAngle())
-
         diff1 = th1 - self._servo1.getAngle()
         diff2 = th2 - self._servo2.getAngle()
-
-        print(self._servo1.getAngle(), self._servo2.getAngle())
 
         if (th1 is None) or (diff1 == 0):
             return self._ease_single(self._servo2, th2)
             
         if (th2 is None) or (diff2 == 0):
             return self._ease_single(self._servo1, th1)
-        
-        print(self._servo1.getAngle(), self._servo2.getAngle())
 
         if numpy.abs(diff1) > numpy.abs(diff2):
             th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1), numpy.sign(diff1) * self.STEP_SIZE)
@@ -202,17 +196,10 @@ class EasyArm:
             th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2), numpy.sign(diff2) * self.STEP_SIZE)
             th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
-        print(self._servo1.getAngle(), self._servo2.getAngle())
-
-        print(th1_angles)
-        print(th2_angles)
-
         for t1, t2 in zip(th1_angles, th2_angles):
             self._servo1.setAngle(t1)
             self._servo2.setAngle(t2)
             time.sleep(self.STEP_TIME)
-
-        print(self._servo1.getAngle(), self._servo2.getAngle())
 
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
