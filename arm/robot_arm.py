@@ -196,6 +196,9 @@ class EasyArm:
             th2_angles = numpy.arange(self._servo2.getAngle(), th2, numpy.sign(diff2) * self.STEP_SIZE)
             th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
+        print(th1_angles)
+        print(th2_angles)
+
         for t1, t2 in zip(th1_angles, th2_angles):
             self._servo1.setAngle(t1)
             self._servo2.setAngle(t2)
