@@ -57,14 +57,22 @@ class RobotArm:
         if y is None:
             y = self._y
 
-        cos_th2 = (x**2 + y**2 - self.L1**2 - self.L2**2) / (2 * self.L1 * self.L2)
-        th2 = acos(cos_th2)
-        th1 = atan(y/x) - atan((self.L2 *sin(th2)) / (self.L1 + self.L2 * cos_th2))
+        _x = x - self.origin[0]
+        _y = y - self.origin[1]
 
-        self.setAngles(th1, th2)
+        cos_th2 = (_x**2 + _y**2 - self.L1**2 - self.L2**2) / (2 * self.L1 * self.L2)
+        th2 = acos(cos_th2)
+        th1 = atan(_y/_x) - atan((self.L2 *sin(th2)) / (self.L1 + self.L2 * cos_th2))
+
+        self.setAngles(th1 - self.ph1, th2 - self.ph2)
 
         self._x = x
         self._y = y
+
+    def getPosition(self) -> tuple[float, float]:
+        """Returns current position."""
+
+        return self.x, self.y
 
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
@@ -87,13 +95,24 @@ class RobotArm:
         self._servo2.STEP_TIME = step_time
 
     @classmethod
-    def configureGeometry(self, l1: float, l2: float, origin: float = None) -> None:
+    def configureGeometry(self, l1: float = None, l2: float = None,
+                          ph1: float = None, ph2: float = None, 
+                          origin: float = None) -> None:
 
-        self.L1 = l1
-        self.L2 = l2
+        if l1 is not None:
+            self.L1 = l1
+        
+        if l2 is not None:
+            self.L2 = l2
+
+        if ph1 is not None:
+            self.ph1 = ph1
+
+        if ph2 is not None:
+            self.ph2 = ph2
 
         if origin is None:
-            origin = l2, l1
+            origin = self.L2, self.L1
 
         else:
             origin = origin
