@@ -35,7 +35,7 @@ class Servo:
         """Set the current angle of the servo."""
 
         if angle is not None:
-            angles = numpy.arrange(self.angle, angle, numpy.sign(angle - self.angle) * self.STEP_SIZE)
+            angles = numpy.arange(self.angle, angle, numpy.sign(angle - self.angle) * self.STEP_SIZE)
             for th in angles:
                 self._servo.ChangeDutyCycle(self._mapAngle(th))
                 time.sleep(self.STEP_TIME)
