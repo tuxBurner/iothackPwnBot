@@ -30,8 +30,7 @@ class Servo:
     def setAngle(self, angle: float = None) -> None:
         """Set the current angle of the servo."""
 
-        angle = self._mapAngle(angle)
-        self._servo.ChangeDutyCycle(angle)
+        self._servo.ChangeDutyCycle(self._mapAngle(angle))
         self.angle = angle
 
     def getAngle(self) -> float:
