@@ -58,7 +58,7 @@ class RobotArm:
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
 
-        return self._servo1.getAngle(), self._servo2.getAngle(
+        return self._servo1.getAngle(), self._servo2.getAngle()
     
     def configureEasing(self, step_size: float = 10, step_time: float = 0.5) -> None:
         """Configure the easing behavior of both servos."""
