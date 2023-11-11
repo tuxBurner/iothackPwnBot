@@ -12,18 +12,14 @@ class Servo:
 
         GPIO.setup(pin, GPIO.OUT)
         
-        self._servo = GPIO.PWM(pin, 150)
+        self._servo = GPIO.PWM(pin, 50)
         self._servo.start(0)
         self.angle = 0
 
     def __del__(self) -> None:
         """Close servo connection."""
 
-        try:
-            self.close()
-
-        except:
-            ...
+        self.close()
 
     def _mapAngle(self, angle: float) -> float:
         """Maps angle to PWM value."""
@@ -46,4 +42,4 @@ class Servo:
     def close(self) -> None:
         """Manually close servos."""
 
-        self._servo.close()
+        self._servo.stop()
