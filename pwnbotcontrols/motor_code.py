@@ -6,7 +6,7 @@ from motor import Motor, motor2040
 motor_a = Motor(motor2040.MOTOR_A)
 motor_b = Motor(motor2040.MOTOR_B)
 
-speed = 2
+speed = 1
 
 all_motor = [motor_a, motor_b]
 
@@ -23,10 +23,12 @@ def stop():
     motor_b.coast()
 
 def rotate_right():
-    print("TODO")
+    motor_a.speed(0)
+    motor_b.speed(-(speed/2))
 
 def rotate_left():
-    print("TODO")
+    motor_a.speed((speed/2))
+    motor_b.speed(0)
 
 def motor_initalize():
     for motor in all_motor:
