@@ -2,20 +2,34 @@ import time
 import math
 from motor import Motor, motor2040
 
-MOTOR_PINS = [motor2040.MOTOR_A, motor2040.MOTOR_B]
-motors = [Motor(pins) for pins in MOTOR_PINS]
+
+motor_a = Motor(motor2040.MOTOR_A)
+motor_b = Motor(motor2040.MOTOR_B)
+
+speed = 2
+
+all_motor = [motor_a, motor_b]
+
+def go_forward():
+    motor_a.speed(speed)
+    motor_b.speed(-speed)
+
+def go_backward():
+    motor_a.speed(-speed)
+    motor_b.speed(speed)
+
+def stop():
+    motor_a.coast()
+    motor_b.coast()
+
+def rotate():
+    print("TODO")
 
 def motor_initalize():
-    for m in motors:
-        m.enable()
-    time.sleep(2)
+    for motor in all_motor:
+        motor.enable()
+    time.sleep(1)
 
-def motor_start():
-    # Drive at full positive
-    for m in motors:
-        m.full_positive()
-    time.sleep(2)
-
-def motor_stop():
-    for m in motors:
-        m.disable()
+def motor_deinitialize():
+    for motor in all_motor:
+        motor.disable()
