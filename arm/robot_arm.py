@@ -20,8 +20,8 @@ class RobotArm:
     L1 = 80 # Shoulder to elbow length
     L2 = 80 # Elbow to wrist length
 
-    ph1 = pi / 2 # servo1 phase offset
-    ph2 = pi / 2 # servo2 phase offset
+    ph1 = 0 # servo1 phase offset
+    ph2 = 0 # servo2 phase offset
     origin = L1, L2
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
@@ -123,8 +123,8 @@ class EasyArm:
 
     L1 = 40 # Shoulder to elbow length
 
-    ph1 = 0 # servo1 phase offset
-    ph2 = 0 # servo2 phase offset
+    ph1 = 90 # servo1 phase offset
+    ph2 = 90 # servo2 phase offset
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
@@ -153,6 +153,7 @@ class EasyArm:
         """Sets the tip height in cartesian coordinates."""
 
         th = asin(h / self.L1)
+        th = th * 360 / 2 * pi
         self.setAngles(th - self.ph1, -th - self.ph2)
 
         self._h = h
