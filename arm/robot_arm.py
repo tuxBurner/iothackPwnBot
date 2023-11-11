@@ -1,6 +1,7 @@
 """Interface for the robot arm."""
 
 from math import acos, atan, sin, asin, pi
+from typing import Self
 import RPi.GPIO as GPIO
 from . import servo
 import time
@@ -128,8 +129,8 @@ class EasyArm:
     ph1 = 90 # servo1 phase offset
     ph2 = 90 # servo2 phase offset
 
+    STEP_SIZE = 1
     STEP_TIME = 0.05
-    TOT_TIME = 5
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
@@ -167,15 +168,38 @@ class EasyArm:
         """Returns current position."""
 
         return self._h
+    
+    def _ease_single(self, servo, angle):
+
+        if angle != servo.getAngles():
+            angles = numpy.arange(servo.getAngle(), angle, self.STEP_SIZE)
+            for th in angles:
+                servo.setAngle(th)
+                time.sleep(self.STEP_TIME)
 
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
 
-        if (th1 is not None) and (th1 != self._servo1.getAngle()):
-                self._servo1.setAngle(th1)
+        diff1 = th1 - self._servo1.getAngle()
+        diff2 = th2 - self._servo2.getAngle()
 
-        if (th2 is not None) and (th2 != self._servo1.getAngle()):
-                self._servo2.setAngle(th2)
+        if (th1 is None) or (diff1 == 0):
+            return self._ease_single(self._servo2, th2)
+            
+        if (th2 is None) or (diff2 == 0):
+            return self._ease_single(self._servo1, th1)
+
+        if diff1 > diff2:
+            th1_angles = numpy.arange(self._servo1.getAngle(), th1, numpy.sign(diff1) * self.STEP_SIZE)
+            th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles))
+        
+        else:
+            th2_angles = numpy.arange(self._servo2.getAngle(), th2, numpy.sign(diff2) * self.STEP_SIZE)
+            th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
+
+        for t1, t2 in zip(th1_angles, th2_angles):
+            self._servo1.setAngle(t1)
+            self._servo2.setAngle(t2)
 
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
