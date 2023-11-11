@@ -1,5 +1,6 @@
 """Interface for the robot arm."""
 
+from math import acos, atan, sin
 import RPi.GPIO as GPIO
 from . import servo
 
@@ -21,6 +22,7 @@ class RobotArm:
 
     ph1 = 0 # servo1 phase offset
     ph2 = 0 # servo2 phase offset
+    origin = L1, L2
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
@@ -31,6 +33,13 @@ class RobotArm:
         self._servo1 = servo.Servo(pin_s1)
         self._servo2 = servo.Servo(pin_s2)
 
+        # internal state
+        self._x = None
+        self._y = None
+
+        # goto origin
+        self.setPosition(0, 0)
+
     def __del__(self) -> None:
         """Close connection."""
 
@@ -39,15 +48,23 @@ class RobotArm:
 
         GPIO.cleanup()
 
-    def moveX(self, x: int) -> None:
-        """Move the tip horizontally."""
+    def setPosition(self, x: float = None, y: float = None):
+        """Sets the tip position in cartesian coordinates."""
 
-        # solve for x(th1, th2)
+        if x is None:
+            x = self._x
 
-    def moveY(self, y: int) -> None:
-        """Move the tip vertically."""
+        if y is None:
+            y = self._y
 
-        # solve for y(th1, th2)
+        cos_th2 = (x**2 + y**2 - self.L1**2 - self.L2**2) / (2 * self.L1 * self.L2)
+        th2 = acos(cos_th2)
+        th1 = atan(y/x) - atan((self.L2 *sin(th2)) / (self.L1 + self.L2 * cos_th2))
+
+        self.setAngles(th1, th2)
+
+        self._x = x
+        self._y = y
 
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
@@ -60,7 +77,7 @@ class RobotArm:
 
         return self._servo1.getAngle(), self._servo2.getAngle()
     
-    def configureEasing(self, step_size: float = 10, step_time: float = 0.5) -> None:
+    def configureEasing(self, step_size: float = 5, step_time: float = 0.2) -> None:
         """Configure the easing behavior of both servos."""
 
         self._servo1.STEP_SIZE = step_size
@@ -68,4 +85,16 @@ class RobotArm:
 
         self._servo2.STEP_SIZE = step_size
         self._servo2.STEP_TIME = step_time
+
+    @classmethod
+    def configureGeometry(self, l1: float, l2: float, origin: float = None) -> None:
+
+        self.L1 = l1
+        self.L2 = l2
+
+        if origin is None:
+            origin = l2, l1
+
+        else:
+            origin = origin
     

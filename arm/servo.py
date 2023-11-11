@@ -8,8 +8,8 @@ import time
 class Servo:
     """Controls a single servo."""
 
-    STEP_SIZE = 10     # Step size in ° for each step.
-    STEP_TIME = 0.5    # Step time in s for each step.
+    STEP_SIZE = 5      # Step size in ° for each step.
+    STEP_TIME = 0.2    # Step time in s for each step.
 
     def __init__(self, pin: int) -> None:
         """Setup servo. Assumes already initialized GPIO."""
@@ -39,6 +39,8 @@ class Servo:
             for th in angles:
                 self._servo.ChangeDutyCycle(self._mapAngle(th))
                 time.sleep(self.STEP_TIME)
+
+        self.angle = angle
 
     def getAngle(self) -> float:
         """Return internal angle state."""
