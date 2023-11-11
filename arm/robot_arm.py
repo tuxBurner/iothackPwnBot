@@ -212,6 +212,8 @@ class EasyArm:
             self._servo2.setAngle(t2)
             time.sleep(self.STEP_TIME)
 
+        print(self._servo1.getAngle(), self._servo2.getAngle())
+
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
 
