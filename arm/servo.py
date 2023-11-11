@@ -32,7 +32,7 @@ class Servo:
     def _mapAngle(self, angle: float) -> float:
         """Maps angle to PWM value."""
 
-        angle = numpy.min(numpy.max(angle, 0), 180)     # clip to [0, 180]
+        angle = numpy.min((numpy.max((angle, 0)), 180))     # clip to [0, 180]
         return numpy.interp(angle, [0, 180], [2, 12])
     
     def setAngle(self, angle: float = None) -> None:
