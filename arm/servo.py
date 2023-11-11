@@ -12,7 +12,7 @@ class Servo:
 
         GPIO.setup(pin, GPIO.OUT)
         
-        self._servo = GPIO.PWM(pin, 50)
+        self._servo = GPIO.PWM(pin, 150)
         self._servo.start(0)
         self.angle = 0
 
