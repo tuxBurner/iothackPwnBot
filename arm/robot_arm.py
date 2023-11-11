@@ -26,6 +26,9 @@ class RobotArm:
     ph2 = 0 # servo2 phase offset
     origin = L1, L2
 
+    STEP_SIZE = 1
+    STEP_TIME = 0.02
+
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
 
@@ -76,18 +79,45 @@ class RobotArm:
 
         return self.x, self.y
 
+    def _ease_single(self, servo, angle):
+
+        if angle != servo.getAngles():
+            angles = numpy.arange(servo.getAngle(), angle, self.STEP_SIZE)
+            for th in angles:
+                servo.setAngle(th)
+                time.sleep(self.STEP_TIME)
+
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
 
-        self._servo1.setAngle(th1)
-        self._servo2.setAngle(th2)
+        diff1 = th1 - self._servo1.getAngle()
+        diff2 = th2 - self._servo2.getAngle()
+
+        if (th1 is None) or (diff1 == 0):
+            return self._ease_single(self._servo2, th2)
+            
+        if (th2 is None) or (diff2 == 0):
+            return self._ease_single(self._servo1, th1)
+
+        if numpy.abs(diff1) > numpy.abs(diff2):
+            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1), numpy.sign(diff1) * self.STEP_SIZE)
+            th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles))
+        
+        else:
+            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2), numpy.sign(diff2) * self.STEP_SIZE)
+            th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
+
+        for t1, t2 in zip(th1_angles, th2_angles):
+            self._servo1.setAngle(t1)
+            self._servo2.setAngle(t2)
+            time.sleep(self.STEP_TIME)
 
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
 
         return self._servo1.getAngle(), self._servo2.getAngle()
     
-    def configureEasing(self, step_size: float = 5, step_time: float = 0.2) -> None:
+    def configureEasing(self, step_size: float = 1, step_time: float = 0.02) -> None:
         """Configure the easing behavior of both servos."""
 
         self._servo1.STEP_SIZE = step_size
@@ -129,7 +159,7 @@ class EasyArm:
     ph2 = 90 # servo2 phase offset
 
     STEP_SIZE = 1
-    STEP_TIME = 0.05
+    STEP_TIME = 0.02
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
@@ -207,7 +237,7 @@ class EasyArm:
         return self._servo1.getAngle(), self._servo2.getAngle()
     
     @classmethod
-    def configureEasing(self, step_size: float = 1, step_time: float = 0.05) -> None:
+    def configureEasing(self, step_size: float = 1, step_time: float = 0.02) -> None:
         """Configure the easing behavior of both servos."""
 
         self.STEP_SIZE = step_size
