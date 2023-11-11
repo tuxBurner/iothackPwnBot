@@ -18,7 +18,7 @@ class Servo:
         
         self._servo = GPIO.PWM(pin, 50)
         self._servo.start(0)
-        self.angle = None
+        self.angle = 0
 
     def __del__(self) -> None:
         """Close servo connection."""

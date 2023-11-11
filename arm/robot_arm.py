@@ -136,7 +136,7 @@ class EasyArm:
         self._servo2 = servo.Servo(pin_s2)
 
         # internal state
-        self._h = None
+        self._h = 0
 
         # goto origin
         self.setHeight(0)
