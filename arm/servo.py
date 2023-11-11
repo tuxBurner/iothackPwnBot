@@ -23,7 +23,11 @@ class Servo:
     def __del__(self) -> None:
         """Close servo connection."""
 
-        self.close()
+        try:
+            self.close()
+
+        except:
+            ...
 
     def _mapAngle(self, angle: float) -> float:
         """Maps angle to PWM value."""
