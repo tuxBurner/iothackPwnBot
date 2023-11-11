@@ -197,9 +197,9 @@ class EasyArm:
             th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
         for t1, t2 in zip(th1_angles, th2_angles):
-            print(t1, t2)
             self._servo1.setAngle(t1)
             self._servo2.setAngle(t2)
+            time.sleep(self.STEP_TIME)
 
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
