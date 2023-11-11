@@ -1,8 +1,7 @@
 """Interface for the robot arm."""
 
 import RPi.GPIO as GPIO
-import time
-import numpy
+from . import servo
 
 ## Notes
 #   - two servo angles th1, th2
@@ -11,7 +10,7 @@ import numpy
 #   - two phases of the servo's ph1, ph2 depending on the build geometry
 #   - x(th1, th2, L1, L2) = [vec(L1) + vec(L2)]_x = L1 * cos(th1 + ph1) + L2 * cos(th2 + ph2)
 #   - y(th1, th2, L1, L2) = [vec(L1) + vec(L2)]_y = L1 * sin(th1 + ph1) + L2 * sin(th2 + ph2)
-#   - Goal: search for th1(x, y), th2(x, y) for x = const. and y = const.
+#   - Goal: search for th1(x, y), th2(x, y) for x = const. and y = const.e
 
 
 class RobotArm:
@@ -28,21 +27,16 @@ class RobotArm:
 
         GPIO.setmode(GPIO.board)
 
-        # servo 1
-        GPIO.setup(pin_s1, GPIO.out)
-        self._servo1 = GPIO.PWM(pin_s1, 50)
-        self._servo1.start(0)
-
-        # servo 1
-        GPIO.setup(pin_s2, GPIO.out)
-        self._servo2 = GPIO.PWM(pin_s2, 50)
-        self._servo2.start(0)
+        # servos
+        self._servo1 = servo.Servo(pin_s1)
+        self._servo2 = servo.Servo(pin_s2)
 
     def __del__(self) -> None:
         """Close connection."""
 
-        self._servo1.stop()
-        self._servo2.stop()
+        self._servo1.close()
+        self._servo2.close()
+
         GPIO.cleanup()
 
     def moveX(self, x: int) -> None:
@@ -55,18 +49,23 @@ class RobotArm:
 
         # solve for y(th1, th2)
 
-    def move1(self, angle: float) -> None:
-        """Controls the angle of the first servo."""
+    def setAngles(self, th1: float = None, th2: float = None) -> None:
+        """Sets the servo angles."""
 
-        self._servo1.ChangeDutyCycle(self._mapAngle(angle))
+        self._servo1.setAngle(th1)
+        self._servo2.setAngle(th2)
 
-    def move2(self, angle: float) -> None:
-        """Controls the angle of the second servo."""
+    def getAngles(self) -> tuple[float, float]:
+        """Return current angles."""
 
-        self._servo2.ChangeDutyCycle(self._mapAngle(angle))
+        return self._servo1.getAngle(), self._servo2.getAngle(
+    
+    def configureEasing(self, step_size: float = 10, step_time: float = 0.5) -> None:
+        """Configure the easing behavior of both servos."""
 
-    def _mapAngle(self, angle: float) -> float:
-        """Maps angle to PWM value."""
+        self._servo1.STEP_SIZE = step_size
+        self._servo1.STEP_TIME = step_time
 
-        return numpy.interp(angle, [0, 180], [2, 12])
+        self._servo2.STEP_SIZE = step_size
+        self._servo2.STEP_TIME = step_time
     
