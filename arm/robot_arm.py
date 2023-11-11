@@ -189,12 +189,12 @@ class EasyArm:
             return self._ease_single(self._servo1, th1)
 
         if numpy.abs(diff1) > numpy.abs(diff2):
-            th1_angles = numpy.arange(self._servo1.getAngle(), th1, numpy.sign(diff1) * self.STEP_SIZE)
-            th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles) - 1)
+            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1), numpy.sign(diff1) * self.STEP_SIZE)
+            th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles))
         
         else:
-            th2_angles = numpy.arange(self._servo2.getAngle(), th2, numpy.sign(diff2) * self.STEP_SIZE)
-            th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles) - 1)
+            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2), numpy.sign(diff2) * self.STEP_SIZE)
+            th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
         print(th1_angles)
         print(th2_angles)
