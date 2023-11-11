@@ -1,6 +1,6 @@
 """Interface for the robot arm."""
 
-from math import acos, atan, sin
+from math import acos, atan, sin, asin
 import RPi.GPIO as GPIO
 from . import servo
 
@@ -116,4 +116,82 @@ class RobotArm:
 
         else:
             origin = origin
+    
+
+class EasyArm:
+    """Easy two servo construct."""
+
+    L1 = 40 # Shoulder to elbow length
+
+    ph1 = 0 # servo1 phase offset
+    ph2 = 0 # servo2 phase offset
+
+    def __init__(self, pin_s1: int, pin_s2: int) -> None:
+        """Setup hardware."""
+
+        GPIO.setmode(GPIO.board)
+
+        # servos
+        self._servo1 = servo.Servo(pin_s1)
+        self._servo2 = servo.Servo(pin_s2)
+
+        # internal state
+        self._h = None
+
+        # goto origin
+        self.setHeight(0)
+
+    def __del__(self) -> None:
+        """Close connection."""
+
+        self._servo1.close()
+        self._servo2.close()
+
+        GPIO.cleanup()
+
+    def setHeight(self, h: float):
+        """Sets the tip height in cartesian coordinates."""
+
+        th = asin(h / self.L1)
+        self.setAngles(th - self.ph1, -th - self.ph2)
+
+        self._h = h
+
+    def getHeight(self) -> tuple[float, float]:
+        """Returns current position."""
+
+        return self._h
+
+    def setAngles(self, th1: float = None, th2: float = None) -> None:
+        """Sets the servo angles."""
+
+        self._servo1.setAngle(th1)
+        self._servo2.setAngle(th2)
+
+    def getAngles(self) -> tuple[float, float]:
+        """Return current angles."""
+
+        return self._servo1.getAngle(), self._servo2.getAngle()
+    
+    def configureEasing(self, step_size: float = 5, step_time: float = 0.2) -> None:
+        """Configure the easing behavior of both servos."""
+
+        self._servo1.STEP_SIZE = step_size
+        self._servo1.STEP_TIME = step_time
+
+        self._servo2.STEP_SIZE = step_size
+        self._servo2.STEP_TIME = step_time
+
+    @classmethod
+    def configureGeometry(self, l1: float = None,
+                          ph1: float = None, ph2: float = None) -> None:
+
+        if l1 is not None:
+            self.L1 = l1
+
+        if ph1 is not None:
+            self.ph1 = ph1
+
+        if ph2 is not None:
+            self.ph2 = ph2
     
