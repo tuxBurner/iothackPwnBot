@@ -1,7 +1,6 @@
 """Interface for the robot arm."""
 
 from math import acos, atan, sin, asin, pi
-from typing import Self
 import RPi.GPIO as GPIO
 from . import servo
 import time
