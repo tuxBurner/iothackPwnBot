@@ -159,7 +159,7 @@ class EasyArm:
 
         th = asin(h / self.L1)
         th = th * 360 / 2 * pi
-        self.setAngles(th - self.ph1, th - self.ph2)
+        self.setAngles(th + self.ph1, th + self.ph2)
 
         self._h = h
 
