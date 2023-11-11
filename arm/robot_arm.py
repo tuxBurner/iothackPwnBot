@@ -3,6 +3,8 @@
 from math import acos, atan, sin, asin, pi
 import RPi.GPIO as GPIO
 from . import servo
+import time
+import numpy
 
 ## Notes
 #   - two servo angles th1, th2
@@ -126,6 +128,9 @@ class EasyArm:
     ph1 = 90 # servo1 phase offset
     ph2 = 90 # servo2 phase offset
 
+    STEP_TIME = 0.05
+    TOT_TIME = 5
+
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
 
@@ -166,22 +171,23 @@ class EasyArm:
     def setAngles(self, th1: float = None, th2: float = None) -> None:
         """Sets the servo angles."""
 
-        self._servo1.setAngle(th1)
-        self._servo2.setAngle(th2)
+        if (th1 is not None) and (th1 != self._servo1.getAngle()):
+                self._servo1.setAngle(th1)
+
+        if (th2 is not None) and (th2 != self._servo1.getAngle()):
+                self._servo2.setAngle(th2)
 
     def getAngles(self) -> tuple[float, float]:
         """Return current angles."""
 
         return self._servo1.getAngle(), self._servo2.getAngle()
     
-    def configureEasing(self, step_size: float = 5, step_time: float = 0.2) -> None:
+    @classmethod
+    def configureEasing(self, step_size: float = 1, step_time: float = 0.05) -> None:
         """Configure the easing behavior of both servos."""
 
-        self._servo1.STEP_SIZE = step_size
-        self._servo1.STEP_TIME = step_time
-
-        self._servo2.STEP_SIZE = step_size
-        self._servo2.STEP_TIME = step_time
+        self.STEP_SIZE = step_size
+        self.STEP_TIME = step_time
 
     @classmethod
     def configureGeometry(self, l1: float = None,
