@@ -22,7 +22,10 @@ def stop():
     motor_a.coast()
     motor_b.coast()
 
-def rotate():
+def rotate_right():
+    print("TODO")
+
+def rotate_left():
     print("TODO")
 
 def motor_initalize():
