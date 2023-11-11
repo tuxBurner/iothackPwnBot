@@ -158,7 +158,7 @@ class EasyArm:
         """Sets the tip height in cartesian coordinates."""
 
         th = - asin(h / self.L1)
-        th = th * 360 / 2 * pi
+        th = th * 360 / (2 * pi)
         self.setAngles(th + self.ph1, th + self.ph2)
 
         self._h = h
