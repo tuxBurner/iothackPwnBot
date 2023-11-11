@@ -27,7 +27,7 @@ class RobotArm:
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
 
-        GPIO.setmode(GPIO.board)
+        GPIO.setmode(GPIO.BOARD)
 
         # servos
         self._servo1 = servo.Servo(pin_s1)
@@ -129,7 +129,7 @@ class EasyArm:
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
 
-        GPIO.setmode(GPIO.board)
+        GPIO.setmode(GPIO.BOARD)
 
         # servos
         self._servo1 = servo.Servo(pin_s1)

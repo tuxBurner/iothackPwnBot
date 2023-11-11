@@ -14,7 +14,7 @@ class Servo:
     def __init__(self, pin: int) -> None:
         """Setup servo. Assumes already initialized GPIO."""
 
-        GPIO.setup(pin, GPIO.out)
+        GPIO.setup(pin, GPIO.OUT)
         
         self._servo = GPIO.PWM(pin, 50)
         self._servo.start(0)
