@@ -6,6 +6,7 @@ from . import servo
 import time
 import numpy
 
+
 ## Notes
 #   - two servo angles th1, th2
 #   - three geometric constants L1, L2 determining the length of the arms
@@ -19,11 +20,11 @@ import numpy
 class RobotArm:
     """Controls the tip movement of the arm."""
 
-    L1 = 80 # Shoulder to elbow length
-    L2 = 80 # Elbow to wrist length
+    L1 = 80  # Shoulder to elbow length
+    L2 = 80  # Elbow to wrist length
 
-    ph1 = 0 # servo1 phase offset
-    ph2 = 0 # servo2 phase offset
+    ph1 = 0  # servo1 phase offset
+    ph2 = 0  # servo2 phase offset
     origin = L1, L2
 
     STEP_SIZE = 1
@@ -45,14 +46,6 @@ class RobotArm:
         # goto origin
         self.setPosition(0, 0)
 
-    def __del__(self) -> None:
-        """Close connection."""
-
-        self._servo1.close()
-        self._servo2.close()
-
-        GPIO.cleanup()
-
     def setPosition(self, x: float = None, y: float = None):
         """Sets the tip position in cartesian coordinates."""
 
@@ -65,9 +58,9 @@ class RobotArm:
         _x = x - self.origin[0]
         _y = y - self.origin[1]
 
-        cos_th2 = (_x**2 + _y**2 - self.L1**2 - self.L2**2) / (2 * self.L1 * self.L2)
+        cos_th2 = (_x ** 2 + _y ** 2 - self.L1 ** 2 - self.L2 ** 2) / (2 * self.L1 * self.L2)
         th2 = acos(cos_th2)
-        th1 = atan(_y/_x) - atan((self.L2 *sin(th2)) / (self.L1 + self.L2 * cos_th2))
+        th1 = atan(_y / _x) - atan((self.L2 * sin(th2)) / (self.L1 + self.L2 * cos_th2))
 
         self.setAngles(th1 - self.ph1, th2 - self.ph2)
 
@@ -95,16 +88,18 @@ class RobotArm:
 
         if (th1 is None) or (diff1 == 0):
             return self._ease_single(self._servo2, th2)
-            
+
         if (th2 is None) or (diff2 == 0):
             return self._ease_single(self._servo1, th1)
 
         if numpy.abs(diff1) > numpy.abs(diff2):
-            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1), numpy.sign(diff1) * self.STEP_SIZE)
+            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1),
+                                      numpy.sign(diff1) * self.STEP_SIZE)
             th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles))
-        
+
         else:
-            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2), numpy.sign(diff2) * self.STEP_SIZE)
+            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2),
+                                      numpy.sign(diff2) * self.STEP_SIZE)
             th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
         for t1, t2 in zip(th1_angles, th2_angles):
@@ -116,7 +111,7 @@ class RobotArm:
         """Return current angles."""
 
         return self._servo1.getAngle(), self._servo2.getAngle()
-    
+
     def configureEasing(self, step_size: float = 1, step_time: float = 0.02) -> None:
         """Configure the easing behavior of both servos."""
 
@@ -128,12 +123,12 @@ class RobotArm:
 
     @classmethod
     def configureGeometry(self, l1: float = None, l2: float = None,
-                          ph1: float = None, ph2: float = None, 
+                          ph1: float = None, ph2: float = None,
                           origin: float = None) -> None:
 
         if l1 is not None:
             self.L1 = l1
-        
+
         if l2 is not None:
             self.L2 = l2
 
@@ -148,16 +143,16 @@ class RobotArm:
 
         else:
             origin = origin
-    
+
 
 class EasyArm:
     """Easy two servo construct."""
 
-    L1 = 40 # Shoulder to elbow length
+    L1 = 40  # Shoulder to elbow length
     BOTTOM_LIMIT = 20
 
-    ph1 = 90 # servo1 phase offset
-    ph2 = 90 # servo2 phase offset
+    ph1 = 90  # servo1 phase offset
+    ph2 = 90  # servo2 phase offset
 
     STEP_SIZE = 5
     STEP_TIME = 0.1
@@ -200,7 +195,7 @@ class EasyArm:
         """Returns current position."""
 
         return self._h
-    
+
     def _ease_single(self, servo, angle):
 
         if angle != servo.getAngles():
@@ -217,16 +212,18 @@ class EasyArm:
 
         if (th1 is None) or (diff1 == 0):
             return self._ease_single(self._servo2, th2)
-            
+
         if (th2 is None) or (diff2 == 0):
             return self._ease_single(self._servo1, th1)
 
         if numpy.abs(diff1) > numpy.abs(diff2):
-            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1), numpy.sign(diff1) * self.STEP_SIZE)
+            th1_angles = numpy.arange(self._servo1.getAngle(), th1 + numpy.sign(diff1),
+                                      numpy.sign(diff1) * self.STEP_SIZE)
             th2_angles = numpy.linspace(self._servo2.getAngle(), th2, len(th1_angles))
-        
+
         else:
-            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2), numpy.sign(diff2) * self.STEP_SIZE)
+            th2_angles = numpy.arange(self._servo2.getAngle(), th2 + numpy.sign(diff2),
+                                      numpy.sign(diff2) * self.STEP_SIZE)
             th1_angles = numpy.linspace(self._servo1.getAngle(), th1, len(th2_angles))
 
         for t1, t2 in zip(th1_angles, th2_angles):
@@ -238,7 +235,7 @@ class EasyArm:
         """Return current angles."""
 
         return self._servo1.getAngle(), self._servo2.getAngle()
-    
+
     @classmethod
     def configureEasing(self, step_size: float = 1, step_time: float = 0.02) -> None:
         """Configure the easing behavior of both servos."""
@@ -261,4 +258,3 @@ class EasyArm:
 
         if ph2 is not None:
             self.ph2 = ph2
-    
