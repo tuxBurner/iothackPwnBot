@@ -225,6 +225,8 @@
         if (keyFired[event.key]) {
             return;
         }
+
+                keyFired[event.key] = true;
         switch (event.key) {
             case 'ArrowUp': //arrow up
             case 'w': //w
@@ -243,15 +245,12 @@
                 move("left");
                 break;
             case "e":
-                keyFired[event.key] = true;
                 move("arm_up");
                 break;
             case "q":
-                keyFired[event.key] = true;
                 move("arm_down");
                 break;
             case " ":
-                keyFired[event.key] = true;
                 move("full_speed");
                 break;
         }

@@ -53,23 +53,23 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_text()
             if data == "up":
                 t.call("go_forward()")
-            # if data == "stop_up":
-            #     t.call("stop()")
+            if data == "stop_up":
+                t.call("stop()")
 
             if data == "down":
                 t.call("go_backward()")
-            # if data == "stop_down":
-            #     t.call("stop()")
+            if data == "stop_down":
+                t.call("stop()")
 
             if data == "right":
                 t.call("rotate_right()")
-            # if data == "stop_right":
-            #     t.call("stop()")
+            if data == "stop_right":
+                t.call("stop()")
 
             if data == "left":
                 t.call("rotate_left()")
-            # if data == "stop_left":
-            #     t.call("stop()")
+            if data == "stop_left":
+                t.call("stop()")
             if data == "arm_up":
                 arm.setHeight(arm.getHeight() + 5)
             if data == "arm_down":

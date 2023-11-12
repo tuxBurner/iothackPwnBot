@@ -23,7 +23,6 @@ def go_forward():
 def go_backward():
     motor_a.speed(-speed)
     motor_b.speed(speed)
-    time.sleep(0.2)
     stop()
 
 
@@ -35,14 +34,12 @@ def stop():
 def rotate_right():
     motor_a.speed(-speed)
     motor_b.speed(-(speed))
-    time.sleep(0.2)
     stop()
 
 
 def rotate_left():
     motor_a.speed((speed))
     motor_b.speed(speed)
-    time.sleep(0.2)
     stop()
 
 
