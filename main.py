@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from pwnbotcontrols.talker import Talker
 from arm import EasyArm
 import os
+from gpiozero import LED
 
 # from camera_single import Camera
 from camera_multi import Camera
@@ -16,6 +17,9 @@ arm = EasyArm(12, 13)
 app = FastAPI()
 t = Talker()
 
+# LED
+led = LED(26)
+led.off()
 
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
@@ -80,6 +84,12 @@ async def websocket_endpoint(websocket: WebSocket):
                 t.call("docking_mode()")
             if data == "stop_docking_mode":
                 t.call("stop_docking_mode()")
+
+            # led control
+            if data == "lightOn":
+                led.on()
+            if data == "lightOff":
+                led.off()    
 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:

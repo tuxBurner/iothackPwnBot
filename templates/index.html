@@ -161,6 +161,7 @@
         </div>
         <div>
             <input type="checkbox" id="docking">Docking Mode</input>
+            <input type="checkbox" id="light">Light</input>
         </div>
     </div>
 </div>
@@ -209,6 +210,14 @@
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+    
+    $('#light').change(function () {
+        if ($(this).is(':checked')) {
+            sendMessage("lightOn");
+        } else {
+            sendMessage("lightOff");
+        }
+    });
 
     var keyFired = {};
 
