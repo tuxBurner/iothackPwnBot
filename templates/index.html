@@ -10,11 +10,15 @@
         .key-background {
             background-color: rgb(128, 128, 128);
         }
+        .flip {
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+        }
     </style>
 </head>
 <body>
 <h1>Video Streaming Demonstration</h1>
-<img height="480" width="640" src="{{ url_for('video_feed') }}" alt="video_feed">
+<img class="flip" height="480" width="640" src="{{ url_for('video_feed') }}" alt="video_feed">
 <h1>Controls</h1>
 <div id="keys">
     <table>
