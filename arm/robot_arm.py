@@ -74,7 +74,7 @@ class RobotArm:
 
     def _ease_single(self, servo, angle):
 
-        if angle != servo.getAngles():
+        if angle != servo.getAngle():
             angles = numpy.arange(servo.getAngle(), angle, self.STEP_SIZE)
             for th in angles:
                 servo.setAngle(th)
@@ -190,7 +190,7 @@ class EasyArm:
 
     def _ease_single(self, servo, angle):
 
-        if angle != servo.getAngles():
+        if angle != servo.getAngle():
             angles = numpy.arange(servo.getAngle(), angle, self.STEP_SIZE)
             for th in angles:
                 servo.setAngle(th)
