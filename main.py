@@ -6,13 +6,13 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from pwnbotcontrols.talker import Talker
-import time
-import serial
+from arm import EasyArm
 import os
 
 # from camera_single import Camera
 from camera_multi import Camera
 
+arm = EasyArm(38, 40)
 app = FastAPI()
 t = Talker()
 
@@ -66,6 +66,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 t.call("rotate_left()")
             if data == "stop_left":
                 t.call("stop()")
+
+            if data == "arm_up":
+                arm.setHeight(arm.getHeight() + 1)
+
+            if data == "arm_down":
+                arm.setHeight(arm.getHeight() - 1)
+
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
         # stop movements
@@ -76,6 +83,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 if __name__ == "__main__":
     print('stop: ctrl+c')
+    os.system("mpremote run ./pwnbotcontrols/motor_code.py")
     os.system("mpremote run ./pwnbotcontrols/motor_code.py")
     t.call('motor_initialize()')
     uvicorn.run(app, host="0.0.0.0", port=8000)
