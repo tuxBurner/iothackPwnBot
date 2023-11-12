@@ -179,8 +179,14 @@
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    var keyFired = {};
 
     $(document).on('keydown', function (event) {
+        if (keyFired[event.key]) {
+            return;
+        } else {
+            keyFired[event.key] = true;
+        }
         switch (event.key) {
             case 'ArrowUp': //arrow up
             case 'w': //w
@@ -209,9 +215,10 @@
                 break;
         }
         event.preventDefault();
-    })
+    });
 
     $(document).on('keyup', function (event) {
+        keyFired[event.key] = false;
         switch (event.key) {
             case 'ArrowUp': //arrow up
             case 'w': //w
@@ -241,7 +248,7 @@
                 break;
         }
         event.preventDefault();
-    })
+    });
 </script>
 </body>
 </html>
