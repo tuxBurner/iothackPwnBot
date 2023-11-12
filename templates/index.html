@@ -12,13 +12,16 @@
             margin: 0;
             text-align: center;
         }
+
         .flip {
             transform: scaleY(-1);
         }
+
         #controls {
             display: flex;
             justify-content: center;
         }
+
         div.key {
             width: 35px;
             height: 37px;
@@ -107,60 +110,70 @@
 <img class="flip" height="480" width="640" src="{{ url_for('video_feed') }}" alt="video_feed">
 <h1>Controls</h1>
 <div id="controls">
-<div id="keys">
-    <table>
-        <tbody>
-        <tr>
-            <td>
-                <div class="key">
+    <div id="keys">
+        <table>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="key">
 				<span id="arm_down_key">
 					Q
 				</span>
-                </div>
-            </td>
-            <td>
-                <div class="key">
-                    <span id="up_key">↑</span>
-                </div>
-            </td>
-            <td>
-                <div class="key">
+                    </div>
+                </td>
+                <td>
+                    <div class="key">
+                        <span id="up_key">↑</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="key">
 				<span id="arm_up_key">
 					E
 				</span>
-                </div>
-            </td>
-            <td>E (Arm up)</td>
-            <td>Q (Arm down)</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="key">
-                    <span id="left_key">←</span>
-                </div>
-            </td>
-            <td>
-                <div class="key">
-                    <span id="down_key">↓</span>
-                </div>
-            </td>
-            <td>
-                <div class="key">
-                    <span id="right_key">→</span>
-                </div>
-            </td>
-            <td>WASD/Arrows</td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="key">
-        <span style="width:160px;" id="full_speed_key">Space</span>
+                    </div>
+                </td>
+                <td>E (Arm up)</td>
+                <td>Q (Arm down)</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="key">
+                        <span id="left_key">←</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="key">
+                        <span id="down_key">↓</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="key">
+                        <span id="right_key">→</span>
+                    </div>
+                </td>
+                <td>WASD/Arrows</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="key">
+            <span style="width:160px;" id="full_speed_key">Space</span>
+        </div>
+        <div>
+            <input type="checkbox" id="docking">Docking Mode</input>
+        </div>
     </div>
 </div>
+<div style="overflow: auto; max-height: 400px">
+    <ul id='messages'>
+    </ul>
 </div>
-<ul id='messages'>
-</ul>
 <script>
+    window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 32 && e.target == document.body) {
+            e.preventDefault();
+        }
+    });
 
     var ws = new WebSocket("ws://pwn1:8000/ws");
     ws.onmessage = function (event) {
@@ -174,6 +187,14 @@
     function sendMessage(msg) {
         ws.send(msg)
     }
+
+    $('#docking').change(function () {
+        if ($(this).is(':checked')) {
+            sendMessage('docking_mode')
+        } else {
+            sendMessage('stop_docking_mode')
+        }
+    });
 
     function move(move) {
         $('#' + move + '_key').addClass('active')
@@ -194,8 +215,6 @@
     $(document).on('keydown', function (event) {
         if (keyFired[event.key]) {
             return;
-        } else {
-            keyFired[event.key] = true;
         }
         switch (event.key) {
             case 'ArrowUp': //arrow up
@@ -215,12 +234,15 @@
                 move("left");
                 break;
             case "e":
+                keyFired[event.key] = true;
                 move("arm_up");
                 break;
             case "q":
+                keyFired[event.key] = true;
                 move("arm_down");
                 break;
             case " ":
+                keyFired[event.key] = true;
                 move("full_speed");
                 break;
         }

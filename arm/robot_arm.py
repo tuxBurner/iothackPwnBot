@@ -150,6 +150,7 @@ class EasyArm:
 
     L1 = 40  # Shoulder to elbow length
     BOTTOM_LIMIT = 20
+    TOP_LIMIT = 10
 
     ph1 = 90  # servo1 phase offset
     ph2 = 90  # servo2 phase offset
@@ -175,7 +176,7 @@ class EasyArm:
     def setHeight(self, h: float):
         """Sets the tip height in cartesian coordinates."""
 
-        h = max(min(h, self.L1), -self.L1 + self.BOTTOM_LIMIT)
+        h = max(min(h, self.L1 - self.TOP_LIMIT), -self.L1 + self.BOTTOM_LIMIT)
 
         th = - asin(h / self.L1)
         th = th * 360 / (2 * pi)
