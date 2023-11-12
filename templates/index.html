@@ -7,10 +7,18 @@
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <title>Bot Controller</title>
     <style>
+        body {
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
         .flip {
             transform: scaleY(-1);
         }
-
+        #controls {
+            display: flex;
+            justify-content: center;
+        }
         div.key {
             width: 35px;
             height: 37px;
@@ -98,6 +106,7 @@
 <h1>PwnBot Camera</h1>
 <img class="flip" height="480" width="640" src="{{ url_for('video_feed') }}" alt="video_feed">
 <h1>Controls</h1>
+<div id="controls">
 <div id="keys">
     <table>
         <tbody>
@@ -147,6 +156,7 @@
     <div class="key">
         <span style="width:160px;" id="full_speed_key">Space</span>
     </div>
+</div>
 </div>
 <ul id='messages'>
 </ul>
