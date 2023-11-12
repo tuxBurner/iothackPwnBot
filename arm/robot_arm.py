@@ -172,14 +172,6 @@ class EasyArm:
         # goto origin
         self.setHeight(0)
 
-    def __del__(self) -> None:
-        """Close connection."""
-
-        self._servo1.close()
-        self._servo2.close()
-
-        GPIO.cleanup()
-
     def setHeight(self, h: float):
         """Sets the tip height in cartesian coordinates."""
 
