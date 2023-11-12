@@ -159,6 +159,9 @@
         <div class="key">
             <span style="width:160px;" id="full_speed_key">Space</span>
         </div>
+        <div>
+            <input type="checkbox" id="docking">Docking Mode</input>
+        </div>
     </div>
 </div>
 <div style="overflow: auto; max-height: 400px">
@@ -184,6 +187,14 @@
     function sendMessage(msg) {
         ws.send(msg)
     }
+
+    $('#docking').change(function () {
+        if ($(this).is(':checked')) {
+            sendMessage('docking_mode')
+        } else {
+            sendMessage('stop_docking_mode')
+        }
+    });
 
     function move(move) {
         $('#' + move + '_key').addClass('active')

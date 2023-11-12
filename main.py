@@ -49,31 +49,37 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_text()
             if data == "up":
                 t.call("go_forward()")
-            if data == "stop_up":
-                t.call("stop()")
+            # if data == "stop_up":
+            #     t.call("stop()")
 
             if data == "down":
                 t.call("go_backward()")
-            if data == "stop_down":
-                t.call("stop()")
+            # if data == "stop_down":
+            #     t.call("stop()")
 
             if data == "right":
                 t.call("rotate_right()")
-            if data == "stop_right":
-                t.call("stop()")
+            # if data == "stop_right":
+            #     t.call("stop()")
 
             if data == "left":
                 t.call("rotate_left()")
-            if data == "stop_left":
-                t.call("stop()")
+            # if data == "stop_left":
+            #     t.call("stop()")
             if data == "arm_up":
                 arm.setHeight(arm.getHeight() + 5)
             if data == "arm_down":
                 arm.setHeight(arm.getHeight() - 5)
+
             if data == "full_speed":
                 t.call("full_speed()")
             if data == "stop_full_speed":
                 t.call("stop_full_speed()")
+
+            if data == "docking_mode":
+                t.call("docking_mode()")
+            if data == "stop_docking_mode":
+                t.call("stop_docking_mode()")
 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
