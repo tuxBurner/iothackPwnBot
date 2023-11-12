@@ -196,7 +196,7 @@ class EasyArm:
 
         self._h = h
 
-    def getHeight(self) -> tuple[float, float]:
+    def getHeight(self):
         """Returns current position."""
 
         return self._h

@@ -1,18 +1,12 @@
 import time
 import math
 from motor import Motor, motor2040
-from arm import EasyArm
 
 
 motor_a = Motor(motor2040.MOTOR_A)
 motor_b = Motor(motor2040.MOTOR_B)
 
-ARM_PIN_1 = 38
-ARM_PIN_2 = 40
-arm = EasyArm(ARM_PIN_1, ARM_PIN_2)
-
 speed = 0.5
-arm_steps = 1
 
 all_motor = [motor_a, motor_b]
 
@@ -44,9 +38,3 @@ def motor_initalize():
 def motor_deinitialize():
     for motor in all_motor:
         motor.disable()
-
-def move_arm_up():
-    arm.setHeight(arm.getHeight() + arm_steps)
-
-def move_arm_down():
-    arm.setHeight(arm.getHeight() - arm_steps)
