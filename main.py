@@ -68,10 +68,10 @@ async def websocket_endpoint(websocket: WebSocket):
                 t.call("stop()")
 
             if data == "arm_up":
-                arm.setHeight(arm.getHeight() + 1)
+                arm.setHeight(arm.getHeight() + 5)
 
             if data == "arm_down":
-                arm.setHeight(arm.getHeight() - 1)
+                arm.setHeight(arm.getHeight() - 5)
 
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:

@@ -10,6 +10,7 @@
         .key-background {
             background-color: rgb(128, 128, 128);
         }
+
         .flip {
             transform: scaleY(-1);
         }
@@ -66,6 +67,11 @@
         sendMessage('stop_' + move)
     }
 
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
     $(document).on('keydown', function (event) {
         switch (event.key) {
             case 'ArrowUp': //arrow up
@@ -87,10 +93,12 @@
 
             case "e":
                 move("arm_up");
+                sleep(500);
                 break;
 
             case "q":
                 move("arm_down");
+                sleep(500);
                 break;
         }
         event.preventDefault();

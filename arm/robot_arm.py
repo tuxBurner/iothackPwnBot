@@ -159,8 +159,8 @@ class EasyArm:
     ph1 = 90 # servo1 phase offset
     ph2 = 90 # servo2 phase offset
 
-    STEP_SIZE = 1
-    STEP_TIME = 0.02
+    STEP_SIZE = 5
+    STEP_TIME = 0.1
 
     def __init__(self, pin_s1: int, pin_s2: int) -> None:
         """Setup hardware."""
