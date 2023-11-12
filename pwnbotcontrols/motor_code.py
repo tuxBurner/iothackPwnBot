@@ -16,8 +16,6 @@ all_motor = [motor_a, motor_b]
 def go_forward():
     motor_a.speed(speed)
     motor_b.speed(-speed)
-    time.sleep(0.2)
-    stop()
 
 
 def go_backward():
@@ -34,13 +32,11 @@ def stop():
 def rotate_right():
     motor_a.speed(-speed)
     motor_b.speed(-(speed))
-    stop()
 
 
 def rotate_left():
     motor_a.speed((speed))
     motor_b.speed(speed)
-    stop()
 
 
 def motor_initalize():
