@@ -7,12 +7,90 @@
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <title>Bot Controller</title>
     <style>
-        .key-background {
-            background-color: rgb(128, 128, 128);
-        }
-
         .flip {
             transform: scaleY(-1);
+        }
+
+        div.key {
+            width: 35px;
+            height: 37px;
+            padding: 1px;
+            margin: 10px;
+        }
+
+        div.key > span {
+            display: block;
+            width: 35px;
+            height: 35px;
+            border: 1px solid #a9a9a9;
+            border-radius: 2px 2px 2px 2px;
+            -moz-border-radius: 2px 2px 2px 2px;
+            -webkit-border-radius: 2px 2px 2px 2px;
+            font-size: 12px;
+            -moz-box-sizing: border-box !important;
+            -webkit-box-sizing: border-box !important;
+            box-sizing: border-box !important;
+            text-align: center;
+            padding-top: 10px;
+            color: #7c7c7c;
+            -webkit-box-shadow: 0px 3px 0px -2px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(169, 169, 169, 1);
+            -moz-box-shadow: 0px 3px 0px -2px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(169, 169, 169, 1);
+            box-shadow: 0px 3px 0px -2px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(169, 169, 169, 1);
+            cursor: pointer;
+        }
+
+        div.key > span.active {
+            background-color: #75b4fb;
+            border: 1px solid #5a88c5;
+            color: #fff;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            margin-top: 2px;
+            box-shadow: none;
+            -moz-box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+        div.key.special > span {
+            padding-top: 15px;
+            font-size: 11px;
+        }
+
+        div.key.icon > span {
+            font-size: 14px;
+        }
+
+        center > h4 {
+            color: #c5c5c5;
+            margin-top: 50px;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background-color: #fff;
+        }
+
+        ul#keys-freebie {
+            display: table;
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        ul#keys-freebie > li {
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            padding: 10px 10px;
+        }
+
+        ul#keys-freebie > li:last-child {
+            margin-right: 0;
+        }
+
+        ul#keys-freebie > li > span {
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -24,21 +102,51 @@
     <table>
         <tbody>
         <tr>
-            <td></td>
-            <td><span id="up_key" style="border: 2px solid black;" class="material-symbols-outlined">arrow_upward</span>
+            <td>
+                <div class="key">
+				<span id="arm_down_key">
+					Q
+				</span>
+                </div>
             </td>
-            <td></td>
+            <td>
+                <div class="key">
+                    <span id="up_key">↑</span>
+                </div>
+            </td>
+            <td>
+                <div class="key">
+				<span id="arm_up_key">
+					E
+				</span>
+                </div>
+            </td>
+            <td>E (Arm up)</td>
+            <td>Q (Arm down)</td>
         </tr>
         <tr>
-            <td><span id="left_key" style="border: 2px solid black;" class="material-symbols-outlined">arrow_back</span>
+            <td>
+                <div class="key">
+                    <span id="left_key">←</span>
+                </div>
             </td>
-            <td><span id="down_key" style="border: 2px solid black;"
-                      class="material-symbols-outlined">arrow_downward</span></td>
-            <td><span id="right_key" style="border: 2px solid black;"
-                      class="material-symbols-outlined">arrow_forward</span></td>
+            <td>
+                <div class="key">
+                    <span id="down_key">↓</span>
+                </div>
+            </td>
+            <td>
+                <div class="key">
+                    <span id="right_key">→</span>
+                </div>
+            </td>
+            <td>WASD/Arrows</td>
         </tr>
         </tbody>
     </table>
+    <div class="key">
+        <span style="width:160px;" id="full_speed_key">Space</span>
+    </div>
 </div>
 <ul id='messages'>
 </ul>
@@ -58,12 +166,12 @@
     }
 
     function move(move) {
-        $('#' + move + '_key').addClass('key-background')
+        $('#' + move + '_key').addClass('active')
         sendMessage(move)
     }
 
     function move_stop(move) {
-        $('#' + move + '_key').removeClass('key-background')
+        $('#' + move + '_key').removeClass('active')
         sendMessage('stop_' + move)
     }
 
@@ -90,15 +198,14 @@
             case 'a': //a
                 move("left");
                 break;
-
             case "e":
                 move("arm_up");
-                sleep(500);
                 break;
-
             case "q":
                 move("arm_down");
-                sleep(500);
+                break;
+            case " ":
+                move("full_speed");
                 break;
         }
         event.preventDefault();
@@ -122,6 +229,15 @@
             case 'ArrowLeft': //arrow left
             case 'a': //a
                 move_stop("left");
+                break;
+            case "e":
+                move_stop("arm_up");
+                break;
+            case "q":
+                move_stop("arm_down");
+                break;
+            case " ":
+                move_stop("full_speed");
                 break;
         }
         event.preventDefault();
