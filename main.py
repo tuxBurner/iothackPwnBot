@@ -12,7 +12,7 @@ import os
 # from camera_single import Camera
 from camera_multi import Camera
 
-arm = EasyArm(23, 26)
+arm = EasyArm(12, 13)
 app = FastAPI()
 t = Talker()
 
