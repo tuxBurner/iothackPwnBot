@@ -154,6 +154,7 @@ class EasyArm:
     """Easy two servo construct."""
 
     L1 = 40 # Shoulder to elbow length
+    BOTTOM_LIMIT = 20
 
     ph1 = 90 # servo1 phase offset
     ph2 = 90 # servo2 phase offset
@@ -186,6 +187,8 @@ class EasyArm:
 
     def setHeight(self, h: float):
         """Sets the tip height in cartesian coordinates."""
+
+        h = max(min(h, self.L1), -self.L1 + self.BOTTOM_LIMIT)
 
         th = - asin(h / self.L1)
         th = th * 360 / (2 * pi)
@@ -244,11 +247,14 @@ class EasyArm:
         self.STEP_TIME = step_time
 
     @classmethod
-    def configureGeometry(self, l1: float = None,
+    def configureGeometry(self, l1: float = None, b_limit: float = None,
                           ph1: float = None, ph2: float = None) -> None:
 
         if l1 is not None:
             self.L1 = l1
+
+        if b_limit is not None:
+            self.BOTTOM_LIMIT = b_limit
 
         if ph1 is not None:
             self.ph1 = ph1

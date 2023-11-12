@@ -66,6 +66,13 @@ async def websocket_endpoint(websocket: WebSocket):
                 t.call("rotate_left()")
             if data == "stop_left":
                 t.call("stop()")
+
+            if data == "arm_up":
+                t.call("move_arm_up()")
+
+            if data == "arm_down":
+                t.call("move_arm_down()")
+
             await websocket.send_text(f"Message text was: {data}")
     except WebSocketDisconnect:
         # stop movements
