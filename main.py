@@ -86,6 +86,5 @@ async def websocket_endpoint(websocket: WebSocket):
 if __name__ == "__main__":
     print('stop: ctrl+c')
     os.system("mpremote run ./pwnbotcontrols/motor_code.py")
-    os.system("mpremote run ./pwnbotcontrols/motor_code.py")
     t.call('motor_initialize()')
     uvicorn.run(app, host="0.0.0.0", port=8000)
