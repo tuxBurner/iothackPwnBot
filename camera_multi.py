@@ -17,6 +17,7 @@ class Camera(BaseCamera):
 
         camera.set(3, 640)
         camera.set(4, 480)
+        camera.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
 
         while True:
             # read current frame
