@@ -21,7 +21,6 @@ def go_forward():
 def go_backward():
     motor_a.speed(-speed)
     motor_b.speed(speed)
-    stop()
 
 
 def stop():
